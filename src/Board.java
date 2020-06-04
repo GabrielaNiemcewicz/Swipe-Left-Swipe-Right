@@ -7,18 +7,23 @@ public class Board {
 	private int WIDTH;
 	private int [][] tiles;
 	private int[] blank;
-	//private ArrayList legalMoves;
+	private int roundCounter;
+	private String END_STATE;
 	
 	Board(int SIZE_WIDTH, int SIZE_HEIGHT)
-	{
+	{	
+		this.roundCounter = 0;
 		this.HEIGHT= SIZE_WIDTH;
 		this.WIDTH= SIZE_HEIGHT;
 		this.blank = new int [2];
 		this.blank[0]=-1;
 		this.blank[1]=-1;
-
-				tiles = new int[this.HEIGHT][this.WIDTH]; 
-				this.init();	
+		
+		tiles = new int[this.HEIGHT][this.WIDTH]; 
+		this.END_STATE = getEND_STATE();
+		this.init();
+		
+				
 	}
 	
 	public int count() {
@@ -34,7 +39,7 @@ public class Board {
 		//[0][1][2]
 		//[3][4][5]
 		
-	//	java.lang.Math.ceil(java.lang.Math.random());
+	
 		
 		for(int i =0; i<HEIGHT; i++)
 			for(int j =0; j<WIDTH; j++)
@@ -42,7 +47,7 @@ public class Board {
 				if(tiles[i][j]==this.count()-1)
 					pivotBlank(i,j);
 				}
-		System.out.println(this.blank[0]+" "+this.blank[1]);
+		System.out.println("Blank at: "+this.blank[0]+" "+this.blank[1]);
 	}
 	
 	private void pivotBlank(int i, int j) {
@@ -71,6 +76,7 @@ public class Board {
 	tiles[sourceHe][sourceWi] = tempTile;
 
 	this.pivotBlank(sourceHe, sourceWi);
+	roundCounter++;
 	}
 	
 	public boolean[] getLegalMoves() {
@@ -92,35 +98,83 @@ public class Board {
 	}
 	
 	//precondition: sweep is legal
-	public void sweep (String direction)
-	{
+	public void sweep (String move, RandomWalk memory){
+		
+		boolean isMove=true;
 		boolean [] isLegal = this.getLegalMoves();
 		
 		int destinHei = blank[0];
 		int destinWi = blank[1];
-		 
 		
-		switch(direction) {
+		if(move.equalsIgnoreCase("undo")){
+			move= memory.undoMove();
+			System.out.println("rec: "+memory.size_moves());
+			isMove=false;
+			}
+		
+		
+		switch(move) {
+		
 			case "up":
 				if(isLegal[0])
-				swap(destinHei+1,destinWi,destinHei,destinWi);
+				{swap(destinHei+1,destinWi,destinHei,destinWi);
+				memory.recordMove(move,isMove);}
+				
 				break;
 			case "down":
 				if(isLegal[1])
-				swap(destinHei-1,destinWi,destinHei,destinWi);
+				{swap(destinHei-1,destinWi,destinHei,destinWi);
+				memory.recordMove(move,isMove);}
 				break;
 			case "right":
 				if(isLegal[2])
-				swap(destinHei,destinWi-1,destinHei,destinWi);
+				{swap(destinHei,destinWi-1,destinHei,destinWi);
+				memory.recordMove(move,isMove);}
 				break;
 			case "left":
 				if(isLegal[3])
-				swap(destinHei,destinWi+1,destinHei,destinWi);
+				{swap(destinHei,destinWi+1,destinHei,destinWi);
+				memory.recordMove(move,isMove);}
 				break;
 			default:
-				System.out.println("Sweeping direction incorrect:"+direction);
+				{System.out.println("Impossible move");
+				break;}
 		}
 	
 	}
+	
+	
+	
+	
+
+	
+	public int getRoundCounter() 
+	{	return roundCounter;   }
+	
+	
+	public String getState() {
+		String hashedState= ""; 
+		
+		for(int i =0; i<HEIGHT; i++) 
+			for(int j =0; j<WIDTH; j++) 
+			hashedState+=	(char) ('A'+ tiles[i][j]);
+			
+		return  hashedState;
 	}
 	
+	public String getEND_STATE() {
+		String hashedState = "";
+		char letter;
+		for(int j =0; j<HEIGHT*WIDTH; j++) 
+		{
+			letter = (char) ('A'+ j);
+			hashedState+= 	letter;
+		}
+		return hashedState;
+	}
+	
+	public boolean game_over() 
+	{	return getState()==this.END_STATE?true:false;	}
+	
+	
+	}
