@@ -64,9 +64,17 @@ public class RandomWalk {
 	public boolean isIn(Board sweepBoard)
 	{	return visitedPaths.contains(sweepBoard.getState())?true:false;		}
 	
+	
 	public void repeatedPath(Board sweepBoard) {
 		if(isIn(sweepBoard))
 			System.out.println("You came back to recorded configuration");
 	}
+	
+	public void putTreeMemory() {
+		TreeSet<Node> commandMemory;
+	}
+	
 
+	
+	
 }

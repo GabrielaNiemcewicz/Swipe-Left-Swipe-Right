@@ -80,9 +80,9 @@ public class Board {
 	}
 	
 	public boolean[] getLegalMoves() {
-		boolean [] isLegal = new boolean[4]; //is each of the moves legal?
+		boolean [] isLegal = new boolean[5]; //is each of the moves legal?
 		//0: down 1: up 2: right 3: left
-		for(int i =0;i<4;i++)
+		for(int i =0;i<5;i++)
 			isLegal[i] = true;
 		
 		if(blank[0]==0)
@@ -93,6 +93,8 @@ public class Board {
 			isLegal[0] = false;
 		if(blank[1]==WIDTH-1)
 			isLegal[3] = false;
+		if(false)
+			isLegal[4] = false;
 		
 		return isLegal;
 	}
@@ -135,6 +137,13 @@ public class Board {
 				if(isLegal[3])
 				{swap(destinHei,destinWi+1,destinHei,destinWi);
 				memory.recordMove(move,isMove);}
+			case "undo":
+				{memory.undoMove();
+				//mark in memory as wrong path
+				
+				}
+			
+				
 				break;
 			default:
 				{System.out.println("Impossible move");

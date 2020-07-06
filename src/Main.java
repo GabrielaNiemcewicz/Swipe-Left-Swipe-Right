@@ -15,7 +15,7 @@ public class Main {
 			decisionTree.repeatedPath(sweepPuzzle);
 			if(!decisionTree.isIn(sweepPuzzle))
 				decisionTree.recordState(sweepPuzzle);
-			if((sweepPuzzle.getRoundCounter()+bot.interfere_rate(sweepPuzzle))%8!=0)
+			if(/*(sweepPuzzle.getRoundCounter()+bot.interfere_rate(sweepPuzzle))%2==0*/false)
 					command = cin.nextLine();
 			else {command = bot.getCommand(sweepPuzzle);
 				System.out.println("Bot has intefered! "+command.toUpperCase());
